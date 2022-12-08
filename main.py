@@ -16,6 +16,8 @@ def render():
 def init_stations():
     stations_file = "data/stacje.csv"
     df = pd.read_csv(stations_file)
+    stations = df.set_index('Kod stacji').T.to_dict('list')
+    print(stations)
     
 
 # get stacji
@@ -24,18 +26,16 @@ def get_stations():
 
 def main():
     #name_of_file = "data/2021_CO_1g.csv"
+    init_stations()
 
 
 
 
+    #data_top = df.head()
 
-    df.set_index('ID').T.to_dict('list')
-
-    data_top = df.head()
-
-    im = plt.imread("data/mapa.jpg")
-    implot = plt.imshow(im)
-    plt.show()
+    #im = plt.imread("data/mapa.jpg")
+    #implot = plt.imshow(im)
+    #plt.show()
 
 
 
