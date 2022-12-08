@@ -9,6 +9,11 @@ y_edge = 170
 
 stations = dict()
 
+def get_coordinates(x,y):
+    new_x = (x - 18)*x_edge + start_x
+    new_y = (y - 54) * y_edge + start_y
+    return new_x, new_y
+
 def render():
     pass
 
@@ -16,7 +21,7 @@ def render():
 def init_stations():
     stations_file = "data/stacje.csv"
     df = pd.read_csv(stations_file)
-    
+
 
 # get stacji
 def get_stations():
