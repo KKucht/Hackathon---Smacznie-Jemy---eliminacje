@@ -7,12 +7,16 @@ start_y = 261 # 54N
 x_edge = 110
 y_edge = 170
 
-station = dict()
+stations = dict()
 
 def render():
     pass
 
 # init naszej stacji
+def init_stations():
+    stations_file = "data/stacje.csv"
+    df = pd.read_csv(stations_file)
+    
 
 # get stacji
 def get_stations():
@@ -20,8 +24,8 @@ def get_stations():
 
 def main():
     #name_of_file = "data/2021_CO_1g.csv"
-    station_file = "data/stacje.csv"
-    df = pd.read_csv(station_file)
+
+
 
 
 
