@@ -11,7 +11,7 @@ y_edge = 170
 
 def get_coordinates(x,y):
     new_x = (x - 18)*x_edge + start_x
-    new_y = (y - 54) * y_edge + start_y
+    new_y = (y - 54) * y_edge *(-1) + start_y
     return new_x, new_y
 
 def render():
@@ -41,7 +41,7 @@ def main():
     im = plt.imread("data/mapa.jpg")
     implot = plt.imshow(im)
 
-    circle1 = patches.Circle((200, 200), radius=100, color='green')
+    circle1 = patches.Circle((x, y), radius=10, color='green')
 
     ax.add_patch(circle1)
     plt.show()
