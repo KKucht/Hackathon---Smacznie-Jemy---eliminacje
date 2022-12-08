@@ -28,22 +28,23 @@ def init_stations():
 def get_stations(name: str, stations):
     return stations[name]
 
+def add_circle(ax,x,y):
+    circle = patches.Circle((x, y), radius=10, color='green')
+    ax.add_patch(circle)
 
 def main():
     #name_of_file = "data/2021_CO_1g.csv"
     stations = init_stations()
     coordinates = get_stations('DsJelGorOgin',stations)
-    print(coordinates)
     x , y = get_coordinates(coordinates[1],coordinates[0])
-    print(x,y)
     #data_top = df.head()
     fig, ax = plt.subplots()
     im = plt.imread("data/mapa.jpg")
     implot = plt.imshow(im)
+    add_circle(ax,x,y)
 
-    circle1 = patches.Circle((x, y), radius=10, color='green')
 
-    ax.add_patch(circle1)
+
     plt.show()
 
 
