@@ -7,3 +7,4 @@
 
 ## Start program 
 `(venv) py main.py <file>`
+File should be in data/
