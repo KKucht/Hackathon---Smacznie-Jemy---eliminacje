@@ -7,45 +7,87 @@ start_y = 261 # 54N
 x_edge = 110
 y_edge = 170
 
+def get_coordinates_from_station(x,y):
+    if x != 0:
+        new_x = (x - 18)*x_edge + start_x
+        new_y = (y - 54) * y_edge *(-1) + start_y
+        return new_x, new_y
+    else:
+        return start_x, start_y
 
-
-def get_coordinates(x,y):
-    new_x = (x - 18)*x_edge + start_x
-    new_y = (y - 54) * y_edge *(-1) + start_y
-    return new_x, new_y
-
-def render():
-    pass
-
-# init naszej stacji
 def init_stations():
     stations_file = "data/stacje.csv"
     df = pd.read_csv(stations_file)
     stations = df.set_index('Kod stacji').T.to_dict('list')
+    for key in stations:
+        x, y =  get_coordinates_from_station(stations[key][1],stations[key][0])
+        stations[key][0] = x
+        stations[key][1] = y
     return stations
-
-# get stacji
-def get_stations(name: str, stations):
-    return stations[name]
 
 def add_circle(ax,x,y):
     circle = patches.Circle((x, y), radius=10, color='green')
     ax.add_patch(circle)
 
+def get_coordinates(stations,data_top):
+    x = np.array([0]*(len(data_top.columns)-1), dtype=float)
+    y = np.array([0]*(len(data_top.columns)-1), dtype=float)
+    names = data_top.loc[0,:].values.tolist()
+    names.pop(0)
+    for i, name in zip(range(0,len(names)), names):
+        x[i] = stations[name][0]
+        y[i] = stations[name][1]
+    return x, y
+
+def get_dates(df):
+    dates = df.iloc[:, 0].values.tolist()
+    dates = dates[5:]
+    for i in range(0, len(dates)):
+        dates[i] = dates[i].split(" ")[0]
+    return dates
+
+def get_value(index,start,end,df):
+    values = df.iloc[start:end, index].astype(float).values.tolist()
+    values = [x for x in values if not(np.isnan(x))]
+    if len(values) == 0:
+        return np.nan
+    return sum(values) / len(values)
+
+def write(x,y):
+    for i in range(len(x)):
+        plt.scatter(x[i], y[i], color='black')
+
+
 def main():
-    #name_of_file = "data/2021_CO_1g.csv"
     stations = init_stations()
-    coordinates = get_stations('DsJelGorOgin',stations)
-    x , y = get_coordinates(coordinates[1],coordinates[0])
-    #data_top = df.head()
+    name_of_file = "data/2021_CO_1g.csv"
+    df = pd.read_csv(name_of_file,low_memory=False)
+    x, y = get_coordinates(stations,df.head())
+    dates = get_dates(df)
+    index = 0
     fig, ax = plt.subplots()
     im = plt.imread("data/mapa.jpg")
     implot = plt.imshow(im)
-    add_circle(ax,x,y)
+    while index < len(dates):
+        date = dates[index]
+        start = index + 5
+        while index < len(dates):
+            if dates[index+1] == date:
+                index = index + 1
+            else:
+                break
+        end = index + 5
+        n = []
+        print(start)
+        print(end)
+        for i in range(1,len(df.columns)):
+            value = get_value(i,start,end,df)
+            n.append(value)
+        print(n)
+        write(x,y)
+        plt.show()
+        index += 1
 
-
-
-    plt.show()
 
 
 
