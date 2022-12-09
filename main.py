@@ -3,7 +3,7 @@ import copy as cp
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt, patches
-import math
+
 
 
 start_x = 496 # 18E
@@ -109,6 +109,8 @@ def main(file_name: str):
         date = dates[index]
         start = index + 5
         while index < len(dates):
+            if index + 1 == len(dates):
+                break
             if dates[index+1] == date:
                 index = index + 1
             else:
