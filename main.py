@@ -1,6 +1,9 @@
+import sys
+import copy as cp
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt, patches
+
 
 start_x = 496 # 18E
 start_y = 261 # 54N
@@ -57,17 +60,32 @@ def write(x,y):
     for i in range(len(x)):
         plt.scatter(x[i], y[i], color='black')
 
+def get_norms(file_name):
+    substance = cp.copy(file_name)
+    substance = substance[5:-7]
+    if substance == "PM10":
+        return [20,50,80,110,150] #ug/m^3
+    if substance == "NO2":
+        return [40, 100, 150, 200, 400] #ug/m^3
+    if substance == "CO":
+        return [3,7,11,15,21] #mg/m^3
 
-def main():
+def main(file_name: str):
     stations = init_stations()
-    name_of_file = "data/2021_CO_1g.csv"
-    df = pd.read_csv(name_of_file,low_memory=False)
+    df = pd.read_csv("data/"+file_name,low_memory=False)
+
     x, y = get_coordinates(stations,df.head())
+
     dates = get_dates(df)
+
+    get_norms(file_name)
+
     index = 0
+
     fig, ax = plt.subplots()
     im = plt.imread("data/mapa.jpg")
     implot = plt.imshow(im)
+
     while index < len(dates):
         date = dates[index]
         start = index + 5
@@ -89,10 +107,8 @@ def main():
         index += 1
 
 
-
-
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1])
 
 
 
