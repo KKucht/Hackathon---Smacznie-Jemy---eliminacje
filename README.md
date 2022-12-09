@@ -6,5 +6,5 @@
 1. `(venv) pip install -r requirements.txt`
 
 ## Start program 
-`(venv) py main.py <file>`
-File should be in data/
+`(venv) py main.py <file>`\
+File should be in data.
