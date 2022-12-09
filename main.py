@@ -3,6 +3,7 @@ import copy as cp
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt, patches
+import math
 
 
 start_x = 496 # 18E
@@ -56,19 +57,36 @@ def get_value(index,start,end,df):
         return np.nan
     return sum(values) / len(values)
 
-def write(x,y):
+def write(x,y,values,norms):
     for i in range(len(x)):
-        plt.scatter(x[i], y[i], color='black')
+        if np.isnan(values[i]):
+            continue
+        color = 'black'
+        if values[i] <= norms[0]:
+            color = 'green'
+        elif values[i] <= norms[1]:
+            color = 'lime'
+        elif values[i] <= norms[2]:
+            color = 'yellow'
+        elif values[i] <= norms[3]:
+            color = 'orange'
+        elif values[i] <= norms[4]:
+            color = 'red'
+        else:
+            color = 'crimson'
+        plt.scatter([x[i]], [y[i]],color=color,alpha=0.7,s=70)
 
-def get_norms(file_name):
-    substance = cp.copy(file_name)
-    substance = substance[5:-7]
+def get_norms(substance):
     if substance == "PM10":
         return [20,50,80,110,150] #ug/m^3
     if substance == "NO2":
         return [40, 100, 150, 200, 400] #ug/m^3
     if substance == "CO":
         return [3,7,11,15,21] #mg/m^3
+
+def get_substance(file_name):
+    substance = cp.copy(file_name)
+    return substance[5:-7]
 
 def main(file_name: str):
     stations = init_stations()
@@ -78,13 +96,14 @@ def main(file_name: str):
 
     dates = get_dates(df)
 
-    get_norms(file_name)
+    substance = get_substance(file_name)
+    norms = get_norms(substance)
 
     index = 0
 
-    fig, ax = plt.subplots()
+
     im = plt.imread("data/mapa.jpg")
-    implot = plt.imshow(im)
+    plt.imshow(im)
 
     while index < len(dates):
         date = dates[index]
@@ -96,14 +115,16 @@ def main(file_name: str):
                 break
         end = index + 5
         n = []
-        print(start)
-        print(end)
         for i in range(1,len(df.columns)):
             value = get_value(i,start,end,df)
             n.append(value)
-        print(n)
-        write(x,y)
-        plt.show()
+        plt.title(substance, loc='left')
+        plt.title(date, loc='right')
+        plt.imshow(im)
+        write(x,y,n,norms)
+        plt.draw()
+        plt.pause(0.0001)
+        plt.clf()
         index += 1
 
 
