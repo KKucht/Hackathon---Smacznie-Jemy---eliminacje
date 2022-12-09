@@ -5,5 +5,5 @@
 1. `venv\Scripts\activate`
 1. `(venv) $ pip install -r requirements.txt`
 
-## Start Uvicorn server 
+## Start program 
 `(venv) py main.py <file>`
